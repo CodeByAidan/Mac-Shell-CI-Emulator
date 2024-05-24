@@ -4,17 +4,35 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Run shell script
-      id: script
+    - name: Run shell script on Ubuntu
+      if: matrix.os == 'ubuntu-latest'
+      id: script_ubuntu
       run: |
-        chmod +x ./test.sh
-        echo "::set-output name=output::$(./test.sh)"
+        chmod +x ./test_ubuntu.sh
+        echo "::set-output name=output::$(./test_ubuntu.sh)"
+
+    - name: Run shell script on Windows
+      if: matrix.os == 'windows-latest'
+      id: script_windows
+      run: |
+        chmod +x ./test_windows.sh
+        echo "::set-output name=output::$(./test_windows.sh)"
+
+    - name: Run shell script on macOS
+      if: matrix.os == 'macos-latest'
+      id: script_macos
+      run: |
+        chmod +x ./test_macos.sh
+        echo "::set-output name=output::$(./test_macos.sh)"
 
     - name: Use output
-      run: echo "${{ steps.script.outputs.output }}"
+      run: echo "${{ steps.script_ubuntu.outputs.output }} ${{ steps.script_windows.outputs.output }} ${{ steps.script_macos.outputs.output }}"
