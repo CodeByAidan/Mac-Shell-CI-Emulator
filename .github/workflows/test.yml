@@ -11,12 +11,12 @@ jobs:
 
     steps:
     - name: Setup Node.js 20
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: 20
+        node-version: '20'
 
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Run shell script on Ubuntu
       if: matrix.os == 'ubuntu-latest'
@@ -24,6 +24,7 @@ jobs:
       run: |
         chmod +x ./test.sh
         echo "output=$(./test.sh)" >> $GITHUB_ENV
+      shell: bash
 
     - name: Run shell script on macOS
       if: matrix.os == 'macos-latest'
@@ -31,6 +32,7 @@ jobs:
       run: |
         chmod +x ./test.sh
         echo "output=$(./test.sh)" >> $GITHUB_ENV
+      shell: bash
 
     - name: Use output
       run: echo "${{ env.output }}"
