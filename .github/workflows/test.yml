@@ -1,0 +1,20 @@
+name: Shell Script Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run shell script
+      id: script
+      run: |
+        chmod +x ./test.sh
+        echo "::set-output name=output::$(./test.sh)"
+
+    - name: Use output
+      run: echo "${{ steps.script.outputs.output }}"
